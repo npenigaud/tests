@@ -16,5 +16,5 @@ export SLURM_EXPORT_ENV='ALL'
 export MPIAUTOCONFIG=mpiauto.PGI.conf
 
 #mpirun -np 4 ./mpicudaaware.x / ajouter -nn 2 si -N 2
-/opt/softs/mpiauto/mpiauto --verbose -openmp 1 --nouse-slurm-mpi --wrap --wrap-stdeo -nn 2 -np 2 -- ./mpc7.x
+/opt/softs/mpiauto/mpiauto --verbose -openmp 1 --nouse-slurm-mpi --wrap --wrap-stdeo -nn 2 -np 4 -- ./mpc8.x
 
