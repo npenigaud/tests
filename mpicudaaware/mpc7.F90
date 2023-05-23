@@ -68,7 +68,7 @@ D_RECV=C_RECV
 IRANKP = MODULO (IRANK-1, ISIZE)
 IRANKN = MODULO (IRANK+1, ISIZE)
 
-!$acc kernels
+!$acc kernels present(dummy1,dummy2)
 do compteur=1,taille
   dummy2(compteur)=dummy2(compteur)+1.01*dummy1(compteur)
 enddo
@@ -95,29 +95,28 @@ CALL MPL_SEND (D_SEND, KDEST=IRANKN+1, KTAG=1001, KCOMM=MPI_COMM_WORLD, KREQUEST
 CALL MPL_WAIT (IREQ_RECV)
 CALL MPL_WAIT (IREQ_SEND)
 
-C_SEND=D_SEND
-C_RECV=D_RECV
-PRINT *, IRANK, " reçu ==> ", C_RECV (1:10)
-PRINT *, IRANK, " envoyé ==> ", C_SEND(1:10)
-
 CALL DR_HOOK('device',1,ZHOOK_HANDLE)
 !$acc wait
 call system_clock(count_val2)
 print *,irank," temps device : ",(count_val2-count_val1)/taux
 
-!$acc kernels
+!$acc kernels present(dummy1,dummy2)
 do compteur=1,taille
   dummy2(compteur)=dummy2(compteur)+1.01*dummy1(compteur)
 enddo
 !$acc end kernels
 
+C_SEND=D_SEND
+C_RECV=D_RECV
+PRINT *, IRANK, " reçu ==> ", C_RECV (1:10)
+PRINT *, IRANK, " envoyé ==> ", C_SEND(1:10)
 
 do compteur=1,taille
   H_SEND(compteur) = H_SEND(compteur)+irank
   H_RECV(compteur) = -1.0
 enddo
 
-!$acc kernels
+!$acc kernels present(dummy1,dummy2)
 do compteur=1,taille
   dummy2(compteur)=dummy2(compteur)+1.01*dummy1(compteur)
 enddo
@@ -150,7 +149,7 @@ CALL DR_HOOK('host data',1,ZHOOK_HANDLE)
 call system_clock(count_val2)
 print *,irank," durée host data ",(count_val2-count_val1)/taux
 
-!$acc kernels
+!$acc kernels present(dummy1,dummy2)
 do compteur=1,taille
   dummy2(compteur)=dummy2(compteur)+1.01*dummy1(compteur)
 enddo
@@ -164,7 +163,7 @@ enddo
 
 !$ACC DATA COPY (H_RECV, H_SEND)
 
-!$acc kernels
+!$acc kernels present(dummy1,dummy2)
 do compteur=1,taille
   dummy2(compteur)=dummy2(compteur)+1.01*dummy1(compteur)
 enddo
@@ -197,7 +196,7 @@ PRINT *, irank, "H_SEND ==> ", H_SEND (1:10)
 call system_clock(count_val2)
 print *,irank," durée update host ",(count_val2-count_val1)/taux
 
-!$acc kernels
+!$acc kernels present(dummy1,dummy2)
 do compteur=1,taille
   dummy2(compteur)=dummy2(compteur)+1.01*dummy1(compteur)
 enddo
@@ -211,7 +210,7 @@ do compteur=1,taille
   H_RECV(compteur) = -1
 enddo
 
-!$acc kernels
+!$acc kernels present(dummy1,dummy2)
 do compteur=1,taille
   dummy2(compteur)=dummy2(compteur)+1.01*dummy1(compteur)
 enddo
@@ -243,7 +242,7 @@ CALL MPL_WAIT (IREQ_SEND)
 call system_clock(count_val2)
 print *,irank," durée host_data use device ",(count_val2-count_val1)/taux
 
-!$acc kernels
+!$acc kernels present(dummy1,dummy2)
 do compteur=1,taille
   dummy2(compteur)=dummy2(compteur)+1.01*dummy1(compteur)
 enddo
